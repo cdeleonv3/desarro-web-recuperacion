@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Usuarios</h1>
+    <p>En esta página puedes crear, listar y eliminar usuarios con el modelo incorporado de Django.</p>
+
+    <h2>Crear usuario</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ creation_form.non_field_errors }}
+        {% for field in creation_form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="messages">
+                    {% for error in field.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" name="create_user">Crear usuario</button>
+    </form>
+
+    <h2>Listado de usuarios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Staff</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email|default:"-" }}</td>
+                    <td>{{ u.is_staff|yesno:"Sí,No" }}</td>
+                    <td>
+                        {% if u != request.user %}
+                            <form method="post" action="{% url 'delete_user' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ u.id }}">
+                                <button type="submit" class="danger">Eliminar</button>
+                            </form>
+                        {% else %}
+                            <button type="button" class="secondary" disabled>Tu sesión</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No hay usuarios creados aún.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

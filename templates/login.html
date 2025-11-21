@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Inicia sesión</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="messages">
+                {% for error in form.non_field_errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <label for="{{ form.username.id_for_label }}">Usuario</label>
+        {{ form.username }}
+
+        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+        {{ form.password }}
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestión de usuarios{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --accent: #2f54eb;
+            --accent-2: #e8ecff;
+            --text: #1f2329;
+            --muted: #5c6470;
+            --danger: #c53030;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(145deg, var(--bg), #e7eefc);
+            color: var(--text);
+        }
+        header {
+            background: var(--card);
+            border-bottom: 1px solid #e1e5ee;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        nav a {
+            margin-right: 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        nav a:last-child { margin-right: 0; }
+        nav a:hover { color: var(--accent); }
+        .container {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 30px rgba(20, 40, 120, 0.08);
+            border: 1px solid #e8ecf5;
+        }
+        h1, h2 { margin-top: 0; }
+        form label { display: block; font-weight: 600; margin: .5rem 0 .25rem; }
+        form input {
+            width: 100%;
+            padding: .75rem;
+            border: 1px solid #d5d9e3;
+            border-radius: 8px;
+            margin-bottom: .75rem;
+        }
+        button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: .7rem 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button.secondary {
+            background: #eef1fb;
+            color: var(--text);
+        }
+        button.danger { background: var(--danger); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: .75rem .5rem;
+            border-bottom: 1px solid #e9edf5;
+            text-align: left;
+        }
+        .messages { margin: 1rem 0; }
+        .messages li {
+            list-style: none;
+            padding: .75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: .5rem;
+        }
+        .messages .success { background: #e7f7ef; color: #1f5132; }
+        .messages .error { background: #ffe8e6; color: #8f1d1d; }
+        .messages .info { background: #e8ecff; color: #1f2a6b; }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div><strong>Recuperación · Usuarios</strong></div>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="{% url 'user_management' %}">Usuarios</a>
+                <a href="{% url 'credits' %}">Créditos</a>
+                <a href="{% url 'logout' %}">Cerrar sesión</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        App de práctica Django · Gestión de usuarios con FBV.
+    </footer>
+</body>
+</html>
